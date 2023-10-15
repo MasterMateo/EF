@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WizLib_DataAccess.Data;
 
@@ -11,9 +12,10 @@ using WizLib_DataAccess.Data;
 namespace WizLib_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231015074945_AddOneToManyFluentBookAndPublisher")]
+    partial class AddOneToManyFluentBookAndPublisher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,9 +96,14 @@ namespace WizLib_DataAccess.Migrations
                     b.Property<int>("Book_Id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Fluent_AuthorAuthor_Id")
+                        .HasColumnType("int");
+
                     b.HasKey("Author_Id", "Book_Id");
 
                     b.HasIndex("Book_Id");
+
+                    b.HasIndex("Fluent_AuthorAuthor_Id");
 
                     b.ToTable("BookAuthor");
                 });
@@ -203,21 +210,6 @@ namespace WizLib_DataAccess.Migrations
                     b.HasIndex("Publisher_Id");
 
                     b.ToTable("Fluent_Books");
-                });
-
-            modelBuilder.Entity("WizLib_Model.Models.Fluent_BookAuthor", b =>
-                {
-                    b.Property<int>("Author_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Book_Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("Author_Id", "Book_Id");
-
-                    b.HasIndex("Book_Id");
-
-                    b.ToTable("Fluent_BookAuthor");
                 });
 
             modelBuilder.Entity("WizLib_Model.Models.Fluent_BookDetail", b =>
@@ -335,6 +327,10 @@ namespace WizLib_DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WizLib_Model.Models.Fluent_Author", null)
+                        .WithMany("BookAuthors")
+                        .HasForeignKey("Fluent_AuthorAuthor_Id");
+
                     b.Navigation("Author");
 
                     b.Navigation("Book");
@@ -359,25 +355,6 @@ namespace WizLib_DataAccess.Migrations
                     b.Navigation("Fluent_Publisher");
                 });
 
-            modelBuilder.Entity("WizLib_Model.Models.Fluent_BookAuthor", b =>
-                {
-                    b.HasOne("WizLib_Model.Models.Fluent_Author", "Fluent_Author")
-                        .WithMany("Fluent_BookAuthors")
-                        .HasForeignKey("Author_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WizLib_Model.Models.Fluent_Book", "Fluent_Book")
-                        .WithMany("Fluent_BookAuthors")
-                        .HasForeignKey("Book_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Fluent_Author");
-
-                    b.Navigation("Fluent_Book");
-                });
-
             modelBuilder.Entity("WizLib_Model.Models.Author", b =>
                 {
                     b.Navigation("BookAuthors");
@@ -396,12 +373,7 @@ namespace WizLib_DataAccess.Migrations
 
             modelBuilder.Entity("WizLib_Model.Models.Fluent_Author", b =>
                 {
-                    b.Navigation("Fluent_BookAuthors");
-                });
-
-            modelBuilder.Entity("WizLib_Model.Models.Fluent_Book", b =>
-                {
-                    b.Navigation("Fluent_BookAuthors");
+                    b.Navigation("BookAuthors");
                 });
 
             modelBuilder.Entity("WizLib_Model.Models.Fluent_BookDetail", b =>

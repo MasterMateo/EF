@@ -23,6 +23,6 @@ namespace WizLib_Model.Models
             }
         }
 
-        public ICollection<BookAuthor> BookAuthors { get; set; }
+        public ICollection<Fluent_BookAuthor> Fluent_BookAuthors { get; set; }
     }
 }
