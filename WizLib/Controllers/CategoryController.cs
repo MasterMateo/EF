@@ -25,7 +25,7 @@ namespace WizLib.Controllers
                 return View(obj);
             }
             //this for edit
-            obj = _db.Categories.FirstOrDefault(u => u.Catrgory_Id == id);
+            obj = _db.Categories.FirstOrDefault(u => u.Category_Id == id);
             if (obj == null)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace WizLib.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(obj.Catrgory_Id == 0)
+                if(obj.Category_Id == 0)
                 {
                     //this is create
                     _db.Categories.Add(obj);
@@ -57,7 +57,7 @@ namespace WizLib.Controllers
 
         public IActionResult Delete(int id)
         {
-            var objFromDb = _db.Categories.FirstOrDefault(u => u.Catrgory_Id==id);
+            var objFromDb = _db.Categories.FirstOrDefault(u => u.Category_Id==id);
             _db.Categories.Remove(objFromDb);
             _db.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -91,7 +91,7 @@ namespace WizLib.Controllers
 
         public IActionResult RemoveMultiple2()
         {
-            IEnumerable<Category> catlist = _db.Categories.OrderByDescending(u => u.Catrgory_Id).Take(2).ToList();
+            IEnumerable<Category> catlist = _db.Categories.OrderByDescending(u => u.Category_Id).Take(2).ToList();
 
             _db.Categories.RemoveRange(catlist);
             _db.SaveChanges();
@@ -100,7 +100,7 @@ namespace WizLib.Controllers
 
         public IActionResult RemoveMultiple5()
         {
-            IEnumerable<Category> catlist = _db.Categories.OrderByDescending(u => u.Catrgory_Id).Take(5).ToList();
+            IEnumerable<Category> catlist = _db.Categories.OrderByDescending(u => u.Category_Id).Take(5).ToList();
 
             _db.Categories.RemoveRange(catlist);
             _db.SaveChanges();

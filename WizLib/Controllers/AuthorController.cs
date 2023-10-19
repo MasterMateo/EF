@@ -13,26 +13,51 @@ namespace WizLib.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            List<Author> authorList = _db.Authors.ToList();
+            return View(authorList);
         }
 
-        public IActionResult Upsert(int? id) 
+        public IActionResult Upsert(int? id)
         {
+            Author author = new Author();
+            if (id == null)
+            {
+                return View(author);
+            }
+            author = _db.Authors.FirstOrDefault(u => u.Author_Id == id);
+            if (author == null)
+            {
+                return NotFound();
+            }
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Category obj)
+        public IActionResult Upsert(Author obj)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                if (obj.Author_Id == 0)
+                {
+                    _db.Authors.Add(obj);
+                }
+                else
+                {
+                    _db.Authors.Update(obj);
+                }
+                _db.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int id)
         {
+            var objFromDb = _db.Authors.FirstOrDefault(u => u.Author_Id == id);
+            _db.Authors.Remove(objFromDb);
+            _db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-
 
     }
 }
